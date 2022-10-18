@@ -1475,7 +1475,7 @@ type TransferDetailInput struct {
 	// 收款用户openid。如果转账特约商户授权类型是INFORMATION_AUTHORIZATION_TYPE，对应的是特约商户公众号下的openid。
 	Openid *string `json:"openid"`
 	// 收款用户姓名。采用标准RSA算法，公钥由微信侧提供
-	UserName *string `json:"user_name" encryption:"EM_APIV3"`
+	UserName *string `json:"user_name,omitempty" encryption:"EM_APIV3"`
 	// 收款方身份证号，可不用填（采用标准RSA算法，公钥由微信侧提供）
 	UserIdCard *string `json:"user_id_card,omitempty" encryption:"EM_APIV3"`
 }
@@ -1503,10 +1503,9 @@ func (o TransferDetailInput) MarshalJSON() ([]byte, error) {
 	}
 	toSerialize["openid"] = o.Openid
 
-	if o.UserName == nil {
-		return nil, fmt.Errorf("field `UserName` is required and must be specified in TransferDetailInput")
+	if o.UserName != nil {
+		toSerialize["user_name"] = o.UserName
 	}
-	toSerialize["user_name"] = o.UserName
 
 	if o.UserIdCard != nil {
 		toSerialize["user_id_card"] = o.UserIdCard
